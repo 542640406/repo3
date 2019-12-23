@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcmp.dao.UserMapper">
+    <resultMap id="userMap" type="User">
+        <id property="id" column="id"></id>
+        <result property="userName" column="user_name"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="password" column="password"/>
+        <result property="pic1Path" column="bic1_path"/>
+        <result property="pic2Path" column="bic2_path"/>
+    </resultMap>
+    <select id="login" resultMap="userMap" parameterType="User">
+            SELECT 	* FROM tcmp.t_user
+                where user_name=#{userName} and password=#{password}
+
+    </select>
+    <select id="queryAll" resultMap="userMap">
+        select * from t_user order by id desc
+    </select>
+    <insert id="save" parameterType="User">
+        INSERT INTO t_user
+        (user_name,PASSWORD,nick_name,mail,bic1_path,bic2_path)
+        VALUES(#{userName},#{password},#{nickName},#{mail},#{pic1Path},#{pic2Path})
+    </insert>
+    <select id="queryById" resultMap="userMap">
+             SELECT * FROM tcmp.t_user
+                where id=#{id}
+    </select>
+</mapper>

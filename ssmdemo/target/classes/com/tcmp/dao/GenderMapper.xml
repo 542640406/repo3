@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcmp.dao.GenderMapper">
+    <resultMap id="genderMap" type="Gender">
+        <id property="id" column="id"/>
+        <result property="gradeName" column="grade_name"/>
+        <result property="createDate" column="create_date"/>
+        <result property="details" column="details"/>
+    </resultMap>
+    <select id="queryGenderByGenderName" resultMap="genderMap">
+            SELECT 	id,
+                grade_name,
+                create_date,
+                details
+                FROM
+                tcmp.grade
+                <where>
+                    <if test="gradeName!=null and gradeName!=''">
+                        grade_name like concat('%',#{gradeName},'%')
+                    </if>
+                </where>
+    </select>
+    <select id="queryGradeById" resultMap="genderMap">
+        SELECT 	id,
+                grade_name,
+                create_date,
+                details
+
+                FROM
+                tcmp.grade
+                WHERE id=#{id}
+    </select>
+    <update id="update" parameterType="Gender">
+        UPDATE tcmp.grade
+                SET
+                grade_name = #{gradeName} ,
+                details = #{details}
+
+                WHERE
+                id = #{id} ;
+    </update>
+    <delete id="delete" parameterType="Integer" >
+                DELETE FROM tcmp.grade
+                    WHERE
+                    id = #{id};
+    </delete>
+    <insert id="save" parameterType="Gender">
+        INSERT INTO tcmp.grade
+	(
+	grade_name,
+	create_date,
+	details
+	)
+	VALUES
+	(
+	#{gradeName},
+	NOW(),
+	#{details}
+	);
+    </insert>
+</mapper>

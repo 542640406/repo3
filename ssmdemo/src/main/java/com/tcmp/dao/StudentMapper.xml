@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcmp.dao.StudentMapper">
+    <resultMap id="studentMap" type="Student">
+        <id property="id" column="id"></id>
+        <result property="studentName" column="student_name"/>
+        <result property="studentNum" column="student_num"/>
+    </resultMap>
+
+    <select id="queryStudentByGender" parameterType="Integer" resultMap="studentMap">
+
+        select * from student
+        <where>
+            <if test="gender!=null and gender!=-1">
+                gender=#{gender}
+            </if>
+        </where>
+        order by age desc
+    </select>
+    <resultMap id="souMap" type="com.tcmp.vo.ScoreVo">
+        <id property="id" column="id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="courseName" column="course_name"/>
+        <result property="score" column="score"/>
+    </resultMap>
+    <select id="query" resultMap="souMap">
+        SELECT s.id,stu.student_name,c.course_name, s.score
+                FROM score s,course c,student stu
+                WHERE s.student_id=stu.id
+                AND course_id=c.id
+    </select>
+    <!--查询详情-->
+    <select id="queryById" resultMap="souMap">
+         SELECT s.id,stu.student_name,c.course_name, s.score
+                FROM score s,course c,student stu
+                WHERE s.student_id=stu.id
+                AND course_id=c.id and s.id=#{sid}
+    </select>
+    <!--修改成绩-->
+    <update id="updateSource" parameterType="Integer">
+        UPDATE tcmp.score
+                SET
+                score = #{score}
+                WHERE
+                id =  #{id} ;
+    </update>
+    <!--删除成绩-->
+    <delete id="delSource" parameterType="Integer">
+        DELETE FROM tcmp.score
+                WHERE
+                id = #{id} ;
+    </delete>
+</mapper>

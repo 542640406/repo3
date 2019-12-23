@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <context:component-scan base-package="com.tcmp.controller"/>
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/statics/**" location="/statics/"/>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!--配置MultipartResolver，用于上传文件，使用spring的CommonMultipartResolver-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="5000000"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+    <!--<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.RuntimeException"></prop>
+            </props>
+        </property>
+    </bean>-->
+    <bean id="theLogger" class="com.tcmp.aop.TheLogger"></bean>
+    <aop:config>
+        <aop:pointcut id="pointcut" expression="execution(* com.tcmp.controller.*.*(..))"></aop:pointcut>
+        <aop:aspect ref="theLogger">
+            <aop:before method="before" pointcut-ref="pointcut"></aop:before>
+            <aop:after-returning method="after"  pointcut-ref="pointcut" returning="result"></aop:after-returning>
+        </aop:aspect>
+    </aop:config>
+</beans>
